@@ -1,0 +1,149 @@
+[
+  {
+    "title_cn": "春望",
+    "original_chinese": "國破山河在，城春草木深。感時花濺淚，恨別鳥驚心。烽火連三月，家書抵萬金。白頭搔更短，渾欲不勝簪。",
+    "pipeline_id": "DuFu_Spring_Prospect",
+    "1_translate_system_prompt": "You are an expert translator of Tang Dynasty poetry (Du Fu, Li Bai). Your goal is to create translations that are poetically powerful in English while remaining faithful to the original's tone, imagery, and meaning.",
+    "playbook": "No strategies learned yet. This is your first attempt.",
+    "ground_truth_json": "{\n  \"hinton\": \"The state is broken, but mountains and rivers remain. Spring comes to the city, grasses and trees grow thick. Moved by the times, flowers splash tears. Grieving separation, birds alarm the heart. Beacon fires have burned for three months now. A letter from home is worth ten thousand pieces of gold. I scratch my white hair, which has grown shorter, until it’s almost too sparse to hold a hatpin.\",\n  \"rexroth\": \"The capital is fallen, but the hills and rivers remain. The city in spring is thick with weeds and grass. Grieving for the times, the flowers sprinkle tears. Hating the parting, the birds cry out in alarm. The beacon fires have flamed for three months. A letter from home is worth ten thousand pieces of gold. I scratch my white hair. It has grown so thin. It will no longer hold the pin.\",\n  \"watson\": \"The nation shattered, mountains and river remain; city in spring, grass and trees burgeoning. Feeling the times, blossoms draw tears; hating separation, birds alarm the heart. Beacon fires three months in succession, a letter from home worth ten thousand in gold. White hairs, fewer for the scratching, soon too few to hold a hairpin up.\"\n}",
+    "1_translate_json": "{\n  \"title_cn\": \"春望\",\n  \"title_en\": \"A Spring Prospect\",\n  \"gemini_translation\": \"The nation shattered, mountains and rivers endure;\\nSpring in the city, where grass and trees grow deep.\\nMoved by the times, flowers shed tears;\\nGrieving separation, birds startle the heart.\\nBeacon fires have blazed for three months on end;\\nA letter from home is worth ten thousand gold.\\nMy white hair, scratched, grows shorter still;\\nToo sparse now to hold a hairpin.\"\n}",
+    "1_translate_data": {
+      "title_cn": "春望",
+      "title_en": "A Spring Prospect",
+      "gemini_translation": "The nation shattered, mountains and rivers endure;\nSpring in the city, where grass and trees grow deep.\nMoved by the times, flowers shed tears;\nGrieving separation, birds startle the heart.\nBeacon fires have blazed for three months on end;\nA letter from home is worth ten thousand gold.\nMy white hair, scratched, grows shorter still;\nToo sparse now to hold a hairpin."
+    },
+    "2_critique_system_prompt": "You are a literary critic comparing translations. You are precise, fair, and identify specific strengths and weaknesses. Return ONLY valid JSON.",
+    "2_critique_json": "{\n  \"strengths\": [\n    \"The opening line, \\\"The nation shattered, mountains and rivers endure,\\\" is strong and poetic, effectively setting the tone.\",\n    \"The translation of \\\"恨別鳥驚心\\\" as \\\"Grieving separation, birds startle the heart\\\" is clear and conveys the emotional impact well.\",\n    \"The phrase \\\"Beacon fires have blazed for three months on end\\\" uses a vivid verb and accurately captures the duration implied by '連'.\",\n    \"The line \\\"A letter from home is worth ten thousand gold\\\" is concise and effectively communicates the immense value.\"\n  ],\n  \"weaknesses\": [\n    \"In line 2, \\\"where grass and trees grow deep\\\" is a bit literal for '草木深'; expert translations like 'thick' (Hinton, Rexroth) or 'burgeoning' (Watson) are more evocative of the visual density.\",\n    \"For '花濺淚' (line 3), \\\"flowers shed tears\\\" is acceptable, but 'splash' (Hinton) or 'sprinkle' (Rexroth) might better capture the active, perhaps more violent, imagery of '濺'.\",\n    \"The final line, \\\"Too sparse now to hold a hairpin,\\\" is somewhat definitive and misses the nuance of '渾欲' (almost, on the verge of); Hinton's \\\"almost too sparse\\\" and Watson's \\\"soon too few\\\" convey this impending state more precisely.\"\n  ],\n  \"main_critique\": \"My translation is generally accurate and clear, but it occasionally opts for a more direct, less nuanced phrasing compared to the experts, particularly in conveying the subtle implications of verbs and adverbs.\"\n}",
+    "2_critique_data": {
+      "strengths": [
+        "The opening line, \"The nation shattered, mountains and rivers endure,\" is strong and poetic, effectively setting the tone.",
+        "The translation of \"恨別鳥驚心\" as \"Grieving separation, birds startle the heart\" is clear and conveys the emotional impact well.",
+        "The phrase \"Beacon fires have blazed for three months on end\" uses a vivid verb and accurately captures the duration implied by '連'.",
+        "The line \"A letter from home is worth ten thousand gold\" is concise and effectively communicates the immense value."
+      ],
+      "weaknesses": [
+        "In line 2, \"where grass and trees grow deep\" is a bit literal for '草木深'; expert translations like 'thick' (Hinton, Rexroth) or 'burgeoning' (Watson) are more evocative of the visual density.",
+        "For '花濺淚' (line 3), \"flowers shed tears\" is acceptable, but 'splash' (Hinton) or 'sprinkle' (Rexroth) might better capture the active, perhaps more violent, imagery of '濺'.",
+        "The final line, \"Too sparse now to hold a hairpin,\" is somewhat definitive and misses the nuance of '渾欲' (almost, on the verge of); Hinton's \"almost too sparse\" and Watson's \"soon too few\" convey this impending state more precisely."
+      ],
+      "main_critique": "My translation is generally accurate and clear, but it occasionally opts for a more direct, less nuanced phrasing compared to the experts, particularly in conveying the subtle implications of verbs and adverbs."
+    },
+    "3_reflect_system_prompt": "You are a senior editor and prompt engineer. Your goal is to write new, actionable instructions to improve a translator's future work. Return ONLY valid JSON.",
+    "3_reflect_json": "{\n  \"learned_patterns\": [\n    \"Prioritize evocative and nuanced phrasing for descriptive elements and verbs, moving beyond literal translations to capture imagery and active meaning.\",\n    \"Carefully translate adverbs and particles that convey nuance (e.g., 'almost', 'on the verge of'), avoiding definitive statements when the original implies subtlety.\"\n  ]\n}",
+    "3_reflect_data": {
+      "learned_patterns": [
+        "Prioritize evocative and nuanced phrasing for descriptive elements and verbs, moving beyond literal translations to capture imagery and active meaning.",
+        "Carefully translate adverbs and particles that convey nuance (e.g., 'almost', 'on the verge of'), avoiding definitive statements when the original implies subtlety."
+      ]
+    },
+    "playbook_snapshot": {
+      "translation_strategies": [
+        "Prioritize evocative and nuanced phrasing for descriptive elements and verbs, moving beyond literal translations to capture imagery and active meaning.",
+        "Carefully translate adverbs and particles that convey nuance (e.g., 'almost', 'on the verge of'), avoiding definitive statements when the original implies subtlety.",
+        "When translating common phrases or actions, prioritize natural, concise English over more literal or elaborate phrasing.",
+        "Strive for poetic conciseness and elegant nuance, especially when conveying complex emotional states or in the poem's concluding lines."
+      ],
+      "critique_strategies": []
+    },
+    "current_ace_prompt": "--- SYSTEM PROMPT ---\nYou are an expert translator of Tang Dynasty poetry (Du Fu, Li Bai). Your goal is to create translations that are poetically powerful in English while remaining faithful to the original's tone, imagery, and meaning.\n\n--- PLAYBOOK (for next run) ---\nTRANSLATION STRATEGIES (learned from previous critiques):\n1. Prioritize evocative and nuanced phrasing for descriptive elements and verbs, moving beyond literal translations to capture imagery and active meaning.\n2. Carefully translate adverbs and particles that convey nuance (e.g., 'almost', 'on the verge of'), avoiding definitive statements when the original implies subtlety.\n"
+  },
+  {
+    "title_cn": "月夜",
+    "original_chinese": "今夜鄜州月，閨中只獨看。遙憐小兒女，未解憶長安。香霧雲鬟濕，清輝玉臂寒。何時倚虛幌，雙照淚痕乾。",
+    "pipeline_id": "DuFu_Moonlit_Night",
+    "1_translate_system_prompt": "You are an expert translator of Tang Dynasty poetry (Du Fu, Li Bai). Your goal is to create translations that are poetically powerful in English while remaining faithful to the original's tone, imagery, and meaning.",
+    "playbook": "TRANSLATION STRATEGIES (learned from previous critiques):\n1. Prioritize evocative and nuanced phrasing for descriptive elements and verbs, moving beyond literal translations to capture imagery and active meaning.\n2. Carefully translate adverbs and particles that convey nuance (e.g., 'almost', 'on the verge of'), avoiding definitive statements when the original implies subtlety.\n",
+    "ground_truth_json": "{\n  \"hinton\": \"Tonight, the Fuchou moon. In her chamber, she watches all alone. I gaze at my distant children, so small they can’t remember Ch’ang-an. Her fragrant mist-cloud hair is damp, her clear-jade arms cold in moonlight. When will we lean in the empty window, moon bright on us, our tears dried?\",\n  \"rexroth\": \"The moon shines in Fu-Chou tonight, In her chamber, she watches alone. I pity my distant boy and girl. They don't know why she thinks of Ch'ang-an. Her cloud-like hair is sweet with mist, Her jade arms cold in the clear moonlight. When shall we lean together in the empty window, Together in brightness, our tears dried?\",\n  \"watson\": \"Tonight in Fuzhou she watches the moon alone, and I think of my small son and daughter far away, too young to understand what's keeping me in Chang'an. Her cloud-soft hair must be damp with fragrant mist, her jade-white arms cold in the clear moonlight. When will we lean together by the empty curtains, the moonlight drying the tear-streaks on our faces?\"\n}",
+    "1_translate_json": "{\n  \"title_cn\": \"月夜\",\n  \"title_en\": \"Moonlit Night\",\n  \"gemini_translation\": \"Tonight, the Fuzhou moon,\\nIn her chambers, she alone beholds.\\nFrom afar, I long for my little children,\\nWho cannot yet grasp missing Chang'an.\\nFragrant mist dampens her cloud-tressed hair,\\nIts clear radiance chills her jade-pale arms.\\nWhen shall we lean against the sheer curtain,\\nAnd its light shines on both, drying our tears?\"\n}",
+    "1_translate_data": {
+      "title_cn": "月夜",
+      "title_en": "Moonlit Night",
+      "gemini_translation": "Tonight, the Fuzhou moon,\nIn her chambers, she alone beholds.\nFrom afar, I long for my little children,\nWho cannot yet grasp missing Chang'an.\nFragrant mist dampens her cloud-tressed hair,\nIts clear radiance chills her jade-pale arms.\nWhen shall we lean against the sheer curtain,\nAnd its light shines on both, drying our tears?"
+    },
+    "2_critique_system_prompt": "You are a literary critic comparing translations. You are precise, fair, and identify specific strengths and weaknesses. Return ONLY valid JSON.",
+    "2_critique_json": "{\n  \"strengths\": [\n    \"The phrase \\\"cloud-tressed hair\\\" for 雲鬟 is a strong poetic choice, effectively conveying the imagery.\",\n    \"The translation of 虛幌 as \\\"sheer curtain\\\" offers a good alternative to \\\"empty window\\\" and accurately captures the visual element.\",\n    \"The overall meaning and emotional core of the poem are accurately conveyed.\"\n  ],\n  \"weaknesses\": [\n    \"The phrase \\\"she alone beholds\\\" for 獨看 in the first stanza is slightly more formal and less natural than the experts' \\\"watches alone\\\" or \\\"watches all alone.\\\"\",\n    \"The line \\\"Who cannot yet grasp missing Chang'an\\\" for 未解憶長安 is a bit clunky and less nuanced than the expert translations, which more elegantly convey the children's inability to understand the speaker's longing or the reason for it.\",\n    \"The final line, \\\"And its light shines on both, drying our tears?\\\" is less concise and poetic than the expert renditions of 雙照淚痕乾, which more elegantly imply the moon's light and the shared experience of drying tears.\"\n  ],\n  \"main_critique\": \"My translation accurately conveys the poem's meaning but occasionally sacrifices poetic conciseness and natural flow for more literal or slightly more elaborate phrasing compared to the expert translations.\"\n}",
+    "2_critique_data": {
+      "strengths": [
+        "The phrase \"cloud-tressed hair\" for 雲鬟 is a strong poetic choice, effectively conveying the imagery.",
+        "The translation of 虛幌 as \"sheer curtain\" offers a good alternative to \"empty window\" and accurately captures the visual element.",
+        "The overall meaning and emotional core of the poem are accurately conveyed."
+      ],
+      "weaknesses": [
+        "The phrase \"she alone beholds\" for 獨看 in the first stanza is slightly more formal and less natural than the experts' \"watches alone\" or \"watches all alone.\"",
+        "The line \"Who cannot yet grasp missing Chang'an\" for 未解憶長安 is a bit clunky and less nuanced than the expert translations, which more elegantly convey the children's inability to understand the speaker's longing or the reason for it.",
+        "The final line, \"And its light shines on both, drying our tears?\" is less concise and poetic than the expert renditions of 雙照淚痕乾, which more elegantly imply the moon's light and the shared experience of drying tears."
+      ],
+      "main_critique": "My translation accurately conveys the poem's meaning but occasionally sacrifices poetic conciseness and natural flow for more literal or slightly more elaborate phrasing compared to the expert translations."
+    },
+    "3_reflect_system_prompt": "You are a senior editor and prompt engineer. Your goal is to write new, actionable instructions to improve a translator's future work. Return ONLY valid JSON.",
+    "3_reflect_json": "{\n  \"learned_patterns\": [\n    \"When translating common phrases or actions, prioritize natural, concise English over more literal or elaborate phrasing.\",\n    \"Strive for poetic conciseness and elegant nuance, especially when conveying complex emotional states or in the poem's concluding lines.\"\n  ]\n}",
+    "3_reflect_data": {
+      "learned_patterns": [
+        "When translating common phrases or actions, prioritize natural, concise English over more literal or elaborate phrasing.",
+        "Strive for poetic conciseness and elegant nuance, especially when conveying complex emotional states or in the poem's concluding lines."
+      ]
+    },
+    "playbook_snapshot": {
+      "translation_strategies": [
+        "Prioritize evocative and nuanced phrasing for descriptive elements and verbs, moving beyond literal translations to capture imagery and active meaning.",
+        "Carefully translate adverbs and particles that convey nuance (e.g., 'almost', 'on the verge of'), avoiding definitive statements when the original implies subtlety.",
+        "When translating common phrases or actions, prioritize natural, concise English over more literal or elaborate phrasing.",
+        "Strive for poetic conciseness and elegant nuance, especially when conveying complex emotional states or in the poem's concluding lines.",
+        "Avoid adding interpretive adjectives or flourishes, especially in rhetorical questions, aiming for a neutral or direct rendering.",
+        "Pay close attention to specific terms that convey geographical nuances (e.g., mountain slopes) or intense physical sensations, ensuring precision and impact."
+      ],
+      "critique_strategies": []
+    },
+    "current_ace_prompt": "--- SYSTEM PROMPT ---\nYou are an expert translator of Tang Dynasty poetry (Du Fu, Li Bai). Your goal is to create translations that are poetically powerful in English while remaining faithful to the original's tone, imagery, and meaning.\n\n--- PLAYBOOK (for next run) ---\nTRANSLATION STRATEGIES (learned from previous critiques):\n1. Prioritize evocative and nuanced phrasing for descriptive elements and verbs, moving beyond literal translations to capture imagery and active meaning.\n2. Carefully translate adverbs and particles that convey nuance (e.g., 'almost', 'on the verge of'), avoiding definitive statements when the original implies subtlety.\n3. When translating common phrases or actions, prioritize natural, concise English over more literal or elaborate phrasing.\n4. Strive for poetic conciseness and elegant nuance, especially when conveying complex emotional states or in the poem's concluding lines.\n"
+  },
+  {
+    "title_cn": "望岳",
+    "original_chinese": "岱宗夫如何？齊魯青未了。造化鍾神秀，陰陽割昏曉。盪胸生曾雲，決眥入歸鳥。會當凌絕頂，一覽眾山小。",
+    "pipeline_id": "DuFu_Gazing_at_the_Sacred_Peak",
+    "1_translate_system_prompt": "You are an expert translator of Tang Dynasty poetry (Du Fu, Li Bai). Your goal is to create translations that are poetically powerful in English while remaining faithful to the original's tone, imagery, and meaning.",
+    "playbook": "TRANSLATION STRATEGIES (learned from previous critiques):\n1. Prioritize evocative and nuanced phrasing for descriptive elements and verbs, moving beyond literal translations to capture imagery and active meaning.\n2. Carefully translate adverbs and particles that convey nuance (e.g., 'almost', 'on the verge of'), avoiding definitive statements when the original implies subtlety.\n3. When translating common phrases or actions, prioritize natural, concise English over more literal or elaborate phrasing.\n4. Strive for poetic conciseness and elegant nuance, especially when conveying complex emotional states or in the poem's concluding lines.\n",
+    "ground_truth_json": "{\n  \"hinton\": \"For all this, what is a the mountain god like? An unending green of lands north and south: from ethereal beauty Creation distills there, yin and yang split dusk and dawn. Swelling clouds sweep by. Returning birds ruin my eyes vanishing. One day soon, at the summit, the other mountains will be small enough to hold, all in a single glance.\",\n  \"rexroth\": \"What shall I say of the Great Peak? The eternal green of Ch’i and Lu. Here the Creator has gathered all magic. North and south it divides the dusk and dawn. My breast is filled with clouds. My eyes are filled with flocks of birds. I must claim to the very top. From there I shall see all the other mountains, summed up in a single glance.\",\n  \"watson\": \"And what's it like, the great Mount Tai? Through Qi and Lu, one endless green. Here the Creator lavished holy beauty, the northern and southern slopes dividing dusk and dawn. Swelling clouds sweep the breast. Straining eyes catch birds returning. One day I must mount the very summit; with one glance, see all mountains small.\"\n}",
+    "1_translate_json": "{\n  \"title_cn\": \"望岳\",\n  \"title_en\": \"Gazing at Mount Tai\",\n  \"gemini_translation\": \"How grand is Mount Tai?\\nAcross Qi and Lu, its green expanse unending.\\nNature's hand bestowed its divine grace,\\nWhere yin and yang cleave dusk from dawn.\\nRising clouds stir the breast,\\nReturning birds vanish into straining eyes.\\nI shall ascend its ultimate peak,\\nAnd all other mountains will appear small.\"\n}",
+    "1_translate_data": {
+      "title_cn": "望岳",
+      "title_en": "Gazing at Mount Tai",
+      "gemini_translation": "How grand is Mount Tai?\nAcross Qi and Lu, its green expanse unending.\nNature's hand bestowed its divine grace,\nWhere yin and yang cleave dusk from dawn.\nRising clouds stir the breast,\nReturning birds vanish into straining eyes.\nI shall ascend its ultimate peak,\nAnd all other mountains will appear small."
+    },
+    "2_critique_system_prompt": "You are a literary critic comparing translations. You are precise, fair, and identify specific strengths and weaknesses. Return ONLY valid JSON.",
+    "2_critique_json": "{\n  \"strengths\": [\n    \"The phrase \\\"its green expanse unending\\\" for '齊魯青未了' effectively conveys the vastness and continuity of the landscape.\",\n    \"\\\"Nature's hand bestowed its divine grace\\\" is a strong personification of '造化鍾神秀' and captures the sacred beauty well.\",\n    \"The use of \\\"cleave\\\" for '割' in \\\"Where yin and yang cleave dusk from dawn\\\" is a powerful and active verb choice.\",\n    \"\\\"Rising clouds stir the breast\\\" vividly expresses the emotional impact of the scene on the observer, capturing '盪胸生曾雲'.\"\n  ],\n  \"weaknesses\": [\n    \"The opening \\\"How grand is Mount Tai?\\\" adds an interpretive adjective (\\\"grand\\\") where the original '岱宗夫如何？' is a more neutral, rhetorical question.\",\n    \"The line \\\"Where yin and yang cleave dusk from dawn\\\" misses the common interpretation of '陰陽' referring to the northern and southern slopes of the mountain, a geographical nuance captured by Rexroth and Watson.\",\n    \"\\\"Returning birds vanish into straining eyes\\\" is grammatically awkward and doesn't fully convey the intensity of '決眥' (straining eyes to the point of tearing) as effectively as the expert translations.\"\n  ],\n  \"main_critique\": \"My translation provides a clear and generally poetic rendition but occasionally adds interpretive flourishes or uses slightly less precise phrasing compared to the experts, particularly in conveying the physical strain of observation and a geographical nuance.\"\n}",
+    "2_critique_data": {
+      "strengths": [
+        "The phrase \"its green expanse unending\" for '齊魯青未了' effectively conveys the vastness and continuity of the landscape.",
+        "\"Nature's hand bestowed its divine grace\" is a strong personification of '造化鍾神秀' and captures the sacred beauty well.",
+        "The use of \"cleave\" for '割' in \"Where yin and yang cleave dusk from dawn\" is a powerful and active verb choice.",
+        "\"Rising clouds stir the breast\" vividly expresses the emotional impact of the scene on the observer, capturing '盪胸生曾雲'."
+      ],
+      "weaknesses": [
+        "The opening \"How grand is Mount Tai?\" adds an interpretive adjective (\"grand\") where the original '岱宗夫如何？' is a more neutral, rhetorical question.",
+        "The line \"Where yin and yang cleave dusk from dawn\" misses the common interpretation of '陰陽' referring to the northern and southern slopes of the mountain, a geographical nuance captured by Rexroth and Watson.",
+        "\"Returning birds vanish into straining eyes\" is grammatically awkward and doesn't fully convey the intensity of '決眥' (straining eyes to the point of tearing) as effectively as the expert translations."
+      ],
+      "main_critique": "My translation provides a clear and generally poetic rendition but occasionally adds interpretive flourishes or uses slightly less precise phrasing compared to the experts, particularly in conveying the physical strain of observation and a geographical nuance."
+    },
+    "3_reflect_system_prompt": "You are a senior editor and prompt engineer. Your goal is to write new, actionable instructions to improve a translator's future work. Return ONLY valid JSON.",
+    "3_reflect_json": "{\n  \"learned_patterns\": [\n    \"Avoid adding interpretive adjectives or flourishes, especially in rhetorical questions, aiming for a neutral or direct rendering.\",\n    \"Pay close attention to specific terms that convey geographical nuances (e.g., mountain slopes) or intense physical sensations, ensuring precision and impact.\"\n  ]\n}",
+    "3_reflect_data": {
+      "learned_patterns": [
+        "Avoid adding interpretive adjectives or flourishes, especially in rhetorical questions, aiming for a neutral or direct rendering.",
+        "Pay close attention to specific terms that convey geographical nuances (e.g., mountain slopes) or intense physical sensations, ensuring precision and impact."
+      ]
+    },
+    "playbook_snapshot": {
+      "translation_strategies": [
+        "Prioritize evocative and nuanced phrasing for descriptive elements and verbs, moving beyond literal translations to capture imagery and active meaning.",
+        "Carefully translate adverbs and particles that convey nuance (e.g., 'almost', 'on the verge of'), avoiding definitive statements when the original implies subtlety.",
+        "When translating common phrases or actions, prioritize natural, concise English over more literal or elaborate phrasing.",
+        "Strive for poetic conciseness and elegant nuance, especially when conveying complex emotional states or in the poem's concluding lines.",
+        "Avoid adding interpretive adjectives or flourishes, especially in rhetorical questions, aiming for a neutral or direct rendering.",
+        "Pay close attention to specific terms that convey geographical nuances (e.g., mountain slopes) or intense physical sensations, ensuring precision and impact."
+      ],
+      "critique_strategies": []
+    },
+    "current_ace_prompt": "--- SYSTEM PROMPT ---\nYou are an expert translator of Tang Dynasty poetry (Du Fu, Li Bai). Your goal is to create translations that are poetically powerful in English while remaining faithful to the original's tone, imagery, and meaning.\n\n--- PLAYBOOK (for next run) ---\nTRANSLATION STRATEGIES (learned from previous critiques):\n1. Prioritize evocative and nuanced phrasing for descriptive elements and verbs, moving beyond literal translations to capture imagery and active meaning.\n2. Carefully translate adverbs and particles that convey nuance (e.g., 'almost', 'on the verge of'), avoiding definitive statements when the original implies subtlety.\n3. When translating common phrases or actions, prioritize natural, concise English over more literal or elaborate phrasing.\n4. Strive for poetic conciseness and elegant nuance, especially when conveying complex emotional states or in the poem's concluding lines.\n5. Avoid adding interpretive adjectives or flourishes, especially in rhetorical questions, aiming for a neutral or direct rendering.\n6. Pay close attention to specific terms that convey geographical nuances (e.g., mountain slopes) or intense physical sensations, ensuring precision and impact.\n"
+  }
+]
