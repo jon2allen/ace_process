@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agentic Context Engineering configuration JSON  Editor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <style>
+        /* Simple transition for modal */
+        [x-cloak] { display: none !important; }
+        .font-mono { font-family: 'Courier New', Courier, monospace; }
+    </style>
+</head>
+<body class="bg-gray-100 p-4 md:p-8">
+
+    <div x-data="configEditor()" class="max-w-7xl mx-auto">
+        
+        <h1 class="text-3xl font-bold text-gray-800 mb-6">Agentic Context Engineering JSON Config Editor</h1>
+
+        <div class="flex border-b border-gray-300 mb-6">
+            <button @click="tab = 'stages'"
+                    :class="tab === 'stages' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500'"
+                    class="py-3 px-6 font-medium border-b-2 hover:text-blue-500 focus:outline-none">
+                STAGES (<span x-text="Object.keys(stages).length"></span>)
+            </button>
+            <button @click="tab = 'jobs'"
+                    :class="tab === 'jobs' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500'"
+                    class="py-3 px-6 font-medium border-b-2 hover:text-blue-500 focus:outline-none">
+                JOBS (<span x-text="jobs.length"></span>)
+            </button>
+            <div class="flex-grow"></div>
+            
+            <div class="flex items-center space-x-2 mr-4">
+                <button @click="$refs.fileInput.click()"
+                        class="bg-gray-500 text-white px-5 py-2 rounded-md hover:bg-gray-600 self-center">
+                    Load Config
+                </button>
+                <input type="file" x-ref="fileInput" @change="loadFromFile($event)" 
+                       accept=".json" style="display: none;">
+            </div>
+            
+            <div class="flex items-center space-x-2 mr-4">
+                <label for="filename" class="text-sm font-medium text-gray-700">Filename:</label>
+                <input type="text" id="filename" x-model="exportFilename"
+                       class="border border-gray-300 rounded px-2 py-1.5 text-sm">
+            </div>
+
+            <button @click="showExportModal = true"
+                    class="bg-green-600 text-white px-5 py-2 rounded-md hover:bg-green-700 self-center">
+                Export Data
+            </button>
+        </div>
+
+        <div x-show="tab === 'stages'" x-cloak>
+            <div class="bg-white p-4 rounded-lg shadow-md mb-6">
+                <h3 class="text-lg font-semibold mb-3">Add New Stage</h3>
+                <div class="flex space-x-3">
+                    <input type="text" x-model="newStageName" placeholder="Enter new stage name (e.g., '4_format')"
+                           class="flex-grow border border-gray-300 rounded p-2">
+                    <button @click="addStage()"
+                            class="bg-blue-600 text-white px-5 py-2 rounded-md hover:bg-blue-700 disabled:opacity-50"
+                            :disabled="!newStageName.trim()">
+                        Add Stage
+                    </button>
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <template x-for="(stage, stageName) in stages" :key="stageName">
+                    <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+                        <div class="flex justify-between items-center mb-4">
+                            <h2 class="text-2xl font-bold text-gray-800" x-text="stageName"></h2>
+                            <div class="flex space-x-4">
+                                <button @click="copyStage(stageName, stage)"
+                                        class="text-blue-600 hover:text-blue-800 font-medium">
+                                    Copy
+                                </button>
+                                <button @click="renameStage(stageName)"
+                                        class="text-green-600 hover:text-green-800 font-medium">
+                                    Rename
+                                </button>
+                                <button @click="deleteStage(stageName)"
+                                        class="text-red-500 hover:text-red-700 font-medium">
+                                    Delete
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <template x-for="(value, key) in stage" :key="key">
+                                <div class="grid grid-cols-12 gap-3">
+                                    <label class="col-span-12 md:col-span-3 block text-sm font-medium text-gray-700 pt-2"
+                                           x-text="key"></label>
+                                    <div class="col-span-12 md-col-span-9">
+                                        <template x-if="typeof value === 'number'">
+                                            <input type="number" step="0.1" x-model.number="stage[key]"
+                                                   class="w-full border border-gray-300 rounded p-2">
+                                        </template>
+                                        <template x-if="typeof value === 'string'">
+                                            <textarea x-model="stage[key]"
+                                                      :rows="value.split('\n').length > 1 ? 10 : 3"
+                                                      class="w-full border border-gray-300 rounded p-2 font-mono text-sm leading-relaxed"></textarea>
+                                        </template>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+
+        <div x-show="tab === 'jobs'" x-cloak>
+            <div class="mb-6">
+                <button @click="addJob()"
+                        class="w-full bg-blue-600 text-white px-5 py-3 rounded-md hover:bg-blue-700 text-lg font-semibold">
+                    + Add New Job
+                </button>
+            </div>
+
+            <div class="space-y-6">
+                <template x-for="(job, index) in jobs" :key="index">
+                    <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200" 
+                         x-data="{ newInputsKey: '', newGroundTruthKey: '' }">
+                        <div class="flex justify-between items-center mb-4">
+                            <h2 class="text-2xl font-bold text-gray-800">
+                                Job: 
+                                <input type="text" x-model="job.id" class="text-2xl font-bold text-gray-800 border-b border-gray-300 focus:border-blue-500 outline-none">
+                            </h2>
+                            <div class="flex space-x-4">
+                                <button @click="copyJob(job, index)"
+                                        class="text-blue-600 hover:text-blue-800 font-medium">
+                                    Copy
+                                </button>
+                                <button @click="deleteJob(index)"
+                                        class="text-red-500 hover:text-red-700 font-medium">
+                                    Delete Job
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <h3 class="text-lg font-semibold text-gray-700 border-b pb-2 mb-3">Inputs</h3>
+                            <div class="space-y-4">
+                                <template x-for="(value, key) in job.inputs" :key="key">
+                                    <div x-data="{ newKeyName: key }"> <div class="flex items-center space-x-3 mb-1">
+                                            <input type="text" x-model="newKeyName" 
+                                                   @blur="renameKey(job, 'inputs', key, newKeyName)"
+                                                   class="font-medium text-gray-600 border-b border-gray-200 focus:border-blue-500 outline-none p-1">
+                                            <button @click="deleteKey(job, 'inputs', key)" 
+                                                    class="text-red-500 hover:text-red-700 text-xs font-medium">Delete</button>
+                                        </div>
+                                        <textarea x-model="job.inputs[key]"
+                                                  :rows="value.split('\n').length > 1 ? 5 : 2"
+                                                  class="w-full border border-gray-300 rounded p-2 font-mono text-sm"></textarea>
+                                    </div>
+                                </template>
+                                <div class="flex space-x-2 mt-4 pt-4 border-t">
+                                    <input type="text" x-model="newInputsKey" placeholder="New key name" 
+                                           class="flex-grow border border-gray-300 rounded p-2 text-sm">
+                                    <button @click="addKey(job, 'inputs', newInputsKey); newInputsKey = ''" 
+                                            class="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300 text-sm font-medium">
+                                        Add Input
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-700 border-b pb-2 mb-3">Ground Truth</h3>
+                            <div class="space-y-4">
+                                <template x-for="(value, key) in job.ground_truth" :key="key">
+                                    <div x-data="{ newKeyName: key }"> <div class="flex items-center space-x-3 mb-1">
+                                            <input type="text" x-model="newKeyName" 
+                                                   @blur="renameKey(job, 'ground_truth', key, newKeyName)"
+                                                   class="font-medium text-gray-600 border-b border-gray-200 focus:border-blue-500 outline-none p-1">
+                                            <button @click="deleteKey(job, 'ground_truth', key)" 
+                                                    class="text-red-500 hover:text-red-700 text-xs font-medium">Delete</button>
+                                        </div>
+                                        <textarea x-model="job.ground_truth[key]" rows="4"
+                                                  class="w-full border border-gray-300 rounded p-2 font-mono text-sm"></textarea>
+                                    </div>
+                                </template>
+                                <div class="flex space-x-2 mt-4 pt-4 border-t">
+                                    <input type="text" x-model="newGroundTruthKey" placeholder="New key name" 
+                                           class="flex-grow border border-gray-300 rounded p-2 text-sm">
+                                    <button @click="addKey(job, 'ground_truth', newGroundTruthKey); newGroundTruthKey = ''" 
+                                            class="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300 text-sm font-medium">
+                                        Add Ground Truth
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+
+        <div x-show="showExportModal" @keydown.escape.window="showExportModal = false"
+             class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center p-4 z-50" x-cloak>
+            <div @click.outside="showExportModal = false"
+                 class="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] flex flex-col">
+                <div class="flex justify-between items-center p-4 border-b">
+                    <h3 class="text-xl font-semibold">Export Edited Data (JSON)</h3>
+                    <button @click="showExportModal = false" class="text-gray-500 hover:text-gray-800">&times;</button>
+                </div>
+                <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6 overflow-y-auto">
+                    <div>
+                        <h4 class="font-semibold mb-2">STAGES</h4>
+                        <pre class="bg-gray-100 p-4 rounded-md border border-gray-300 overflow-auto h-96 text-sm"
+                             style="white-space: pre-wrap; word-break: break-all;"
+                             x-text="JSON.stringify(stages, null, 2)"></pre>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold mb-2">JOBS</h4>
+                        <pre class="bg-gray-100 p-4 rounded-md border border-gray-300 overflow-a-auto h-96 text-sm"
+                             style="white-space: pre-wrap; word-break: break-all;"
+                             x-text="JSON.stringify(jobs, null, 2)"></pre>
+                    </div>
+                </div>
+                <div class="p-4 border-t bg-gray-50 text-right space-x-3">
+                    <button @click="saveToFile()"
+                            class="bg-blue-600 text-white px-5 py-2 rounded-md hover:bg-blue-700">
+                        Save to File
+                    </button>
+                    <button @click="showExportModal = false"
+                            class="bg-gray-600 text-white px-5 py-2 rounded-md hover:bg-gray-700">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function configEditor() {
+            return {
+                // --- STATE ---
+                tab: 'stages',
+                showExportModal: false,
+                newStageName: '',
+                exportFilename: 'poetry',
+                newJobTemplate: {
+                    "id": "New_Job_ID",
+                    "inputs": {
+                        "title_cn": "新標題",
+                        "original_chinese": "在此處輸入新的中文詩..."
+                    },
+                    "ground_truth": {
+                        "expert1": "Enter expert translation 1...",
+                        "expert2": "Enter expert translation 2..."
+                    }
+                },
+                
+                // --- INITIAL DATA (Corrected with Template Literals) ---
+                stages: {
+                    "1_translate": {
+                        "system_prompt": "You are an expert translator of Tang Dynasty poetry (Du Fu, Li Bai). Your goal is to create translations that are poetically powerful in English while remaining faithful to the original's tone, imagery, and meaning.",
+                        "playbook_section": "translation",
+                        "temperature": 0.2,
+                        "user_prompt_template":
+`{playbook}
+
+PROCESS:
+Translate the following Chinese poem into English. 
+
+DATA (Original Chinese):
+{original_chinese}
+
+JSON FORMAT:
+{{
+  "title_cn": "{title_cn}",
+  "title_en": "Your translated title",
+  "gemini_translation": "Your full translated poem as a single string."
+}}
+`
+                    },
+                    "2_critique": {
+                        "system_prompt": "You are a literary critic comparing translations. You are precise, fair, and identify specific strengths and weaknesses. Return ONLY valid JSON.",
+                        "playbook_section": "critique",
+                        "temperature": 0.1,
+                        "user_prompt_template":
+`DATA (Original Chinese):
+{original_chinese}
+
+GROUND TRUTH (Expert Human Translations):
+{ground_truth_json}
+
+MY TRANSLATION (from Stage 1):
+{1_translate_json}
+
+PROCESS:
+Critically compare my 'MY TRANSLATION' against the 'GROUND TRUTH' expert translations.
+- What specific phrases or lines did the experts handle better?
+- What specific phrases or lines did I handle well or in an interesting new way?
+- What is the key weakness of 'MY TRANSLATION' (e.g., missed tone, wrong word choice, awkward phrasing)?
+
+JSON FORMAT:
+{{
+  "strengths": [
+    "A specific strength of my translation (e.g., 'Good handling of line 1').",
+    "..."
+  ],
+  "weaknesses": [
+    "A specific weakness (e.g., 'Missed the meaning of "渾欲不勝簪" in the final line.')",
+    "..."
+  ],
+  "main_critique": "A one-sentence summary of the main difference between my translation and the experts."
+}}
+`
+                    },
+                    "3_reflect": {
+                        "system_prompt": "You are a senior editor and prompt engineer. Your goal is to write new, actionable instructions to improve a translator's future work. Return ONLY valid JSON.",
+                        "playbook_section": "all",
+                        "temperature": 0.3,
+                        "user_prompt_template":
+`DATA (Critique from Stage 2):
+{2_critique_json}
+
+GROUND TRUTH (Expert Human Translations):
+{ground_truth_json}
+
+PROCESS:
+Based *only* on the 'weaknesses' and 'main_critique' from the critique, generate one or two new, specific, actionable instructions for the translator (the 'learned_patterns').
+- These instructions will be added to the playbook for the *next* translation.
+- They should be short and direct.
+- Example: "Instruction: 'Pay close attention to the final couplet, as it often holds the poem's core emotion.'"
+- Example: "Instruction: 'When you see the character "淚" (tears), consider if it's literal (crying) or metaphorical (grieving), like the experts do.'"
+
+JSON FORMAT:
+{{
+    "learned_patterns": [
+        "A new, actionable instruction for the translation prompt.",
+        "Another new, actionable instruction."
+    ]
+}}
+`
+                    }
+                },
+                jobs: [
+                    {
+                        "id": "DuFu_Spring_Prospect",
+                        "inputs": {
+                            "title_cn": "春望",
+                            "original_chinese": "國破山河在，城春草木深。感時花濺淚，恨別鳥驚心。烽火連三月，家書抵萬金。白頭搔更短，渾欲不勝簪。"
+                        },
+                        "ground_truth": {
+                            "hinton": "The state is broken, but mountains and rivers remain. Spring comes to the city, grasses and trees grow thick. Moved by the times, flowers splash tears. Grieving separation, birds alarm the heart. Beacon fires have burned for three months now. A letter from home is worth ten thousand pieces of gold. I scratch my white hair, which has grown shorter, until it’s almost too sparse to hold a hatpin.",
+                            "rexroth": "The capital is fallen, but the hills and rivers remain. The city in spring is thick with weeds and grass. Grieving for the times, the flowers sprinkle tears. Hating the parting, the birds cry out in alarm. The beacon fires have flamed for three months. A letter from home is worth ten thousand pieces of gold. I scratch my white hair. It has grown so thin. It will no longer hold the pin.",
+                            "watson": "The nation shattered, mountains and river remain; city in spring, grass and trees burgeoning. Feeling the times, blossoms draw tears; hating separation, birds alarm the heart. Beacon fires three months in succession, a letter from home worth ten thousand in gold. White hairs, fewer for the scratching, soon too few to hold a hairpin up."
+                        }
+                    },
+                    {
+                        "id": "DuFu_Moonlit_Night",
+                        "inputs": {
+                            "title_cn": "月夜",
+                            "original_chinese": "今夜鄜州月，閨中只獨看。遙憐小兒女，未解憶長安。香霧雲鬟濕，清輝玉臂寒。何時倚虛幌，雙照淚痕乾。"
+                        },
+                        "ground_truth": {
+                            "hinton": "Tonight, the Fuchou moon. In her chamber, she watches all alone. I gaze at my distant children, so small they can’t remember Ch’ang-an. Her fragrant mist-cloud hair is damp, her clear-jade arms cold in moonlight. When will we lean in the empty window, moon bright on us, our tears dried?",
+                            "rexroth": "The moon shines in Fu-Chou tonight, In her chamber, she watches alone. I pity my distant boy and girl. They don't know why she thinks of Ch'ang-an. Her cloud-like hair is sweet with mist, Her jade arms cold in the clear moonlight. When shall we lean together in the empty window, Together in brightness, our tears dried?",
+                            "watson": "Tonight in Fuzhou she watches the moon alone, and I think of my small son and daughter far away, too young to understand what's keeping me in Chang'an. Her cloud-soft hair must be damp with fragrant mist, her jade-white arms cold in the clear moonlight. When will we lean together by the empty curtains, the moonlight drying the tear-streaks on our faces?"
+                        }
+                    },
+                    {
+                        "id": "DuFu_Gazing_at_the_Sacred_Peak",
+                        "inputs": {
+                            "title_cn": "望岳",
+                            "original_chinese": "岱宗夫如何？齊魯青未了。造化鍾神秀，陰陽割昏曉。盪胸生曾雲，決眥入歸鳥。會當凌絕頂，一覽眾山小。"
+                        },
+                        "ground_truth": {
+                            "hinton": "For all this, what is a the mountain god like? An unending green of lands north and south: from ethereal beauty Creation distills there, yin and yang split dusk and dawn. Swelling clouds sweep by. Returning birds ruin my eyes vanishing. One day soon, at the summit, the other mountains will be small enough to hold, all in a single glance.",
+                            "rexroth": "What shall I say of the Great Peak? The eternal green of Ch’i and Lu. Here the Creator has gathered all magic. North and south it divides the dusk and dawn. My breast is filled with clouds. My eyes are filled with flocks of birds. I must claim to the very top. From there I shall see all the other mountains, summed up in a single glance.",
+                            "watson": "And what's it like, the great Mount Tai? Through Qi and Lu, one endless green. Here the Creator lavished holy beauty, the northern and southern slopes dividing dusk and dawn. Swelling clouds sweep the breast. Straining eyes catch birds returning. One day I must mount the very summit; with one glance, see all mountains small."
+                        }
+                    }
+                ],
+
+                // --- METHODS ---
+                addJob() {
+                    this.jobs.push(JSON.parse(JSON.stringify(this.newJobTemplate)));
+                },
+                deleteJob(index) {
+                    if (confirm('Are you sure you want to delete this job?')) {
+                        this.jobs.splice(index, 1);
+                    }
+                },
+                copyJob(job, index) {
+                    const newJob = JSON.parse(JSON.stringify(job)); 
+                    newJob.id = job.id + '_copy'; 
+                    this.jobs.splice(index + 1, 0, newJob);
+                },
+                addStage() {
+                    if (this.newStageName.trim() && !this.stages[this.newStageName.trim()]) {
+                        this.stages[this.newStageName.trim()] = {
+                            "system_prompt": "New system prompt...",
+                            "playbook_section": "default",
+                            "temperature": 0.5,
+                            "user_prompt_template": "New user prompt template..."
+                        };
+                        this.newStageName = '';
+                    } else if (this.stages[this.newStageName.trim()]) {
+                        alert('A stage with this name already exists.');
+                    }
+                },
+                deleteStage(stageName) {
+                    if (confirm(`Are you sure you want to delete the stage: '${stageName}'?`)) {
+                        delete this.stages[stageName];
+                    }
+                },
+                copyStage(stageName, stage) {
+                    let newName = stageName + '_copy';
+                    let i = 1;
+                    while (this.stages[newName]) {
+                        newName = `${stageName}_copy${i++}`;
+                    }
+
+                    const newStages = {};
+                    for (const key in this.stages) {
+                        newStages[key] = this.stages[key];
+                        if (key === stageName) {
+                            newStages[newName] = JSON.parse(JSON.stringify(stage));
+                        }
+                    }
+                    this.stages = newStages;
+                },
+                renameStage(oldName) {
+                    const newName = prompt('Enter new stage name:', oldName);
+                    if (!newName || newName.trim() === '' || newName === oldName) {
+                        return;
+                    }
+                    if (this.stages[newName]) {
+                        alert(`A stage with the name "${newName}" already exists.`);
+                        return;
+                    }
+                    const newStages = {};
+                    for (const key in this.stages) {
+                        if (key === oldName) {
+                            newStages[newName] = this.stages[oldName];
+                        } else {
+                            newStages[key] = this.stages[key];
+                        }
+                    }
+                    this.stages = newStages;
+                },
+
+                // --- Methods for dynamic keys ---
+                addKey(job, sectionName, newKey) {
+                    if (!newKey || !newKey.trim()) {
+                        alert('Key name cannot be empty.');
+                        return;
+                    }
+                    const section = job[sectionName];
+                    if (section[newKey]) {
+                        alert('Key already exists!');
+                        return;
+                    }
+                    // Must assign new object to trigger reactivity
+                    job[sectionName] = {
+                        ...section,
+                        [newKey]: "New value..."
+                    };
+                },
+                deleteKey(job, sectionName, keyToDelete) {
+                    if (!confirm(`Are you sure you want to delete the key "${keyToDelete}"?`)) {
+                        return;
+                    }
+                    // Rebuild object to trigger reactivity
+                    const newSection = {};
+                    for (const k in job[sectionName]) {
+                        if (k !== keyToDelete) {
+                            newSection[k] = job[sectionName][k];
+                        }
+                    }
+                    job[sectionName] = newSection;
+                },
+                renameKey(job, sectionName, oldKey, newKey) {
+                    const section = job[sectionName];
+                    if (!newKey || newKey === oldKey) {
+                        return; // No change, or empty
+                    }
+                    if (section[newKey]) {
+                        alert('Key already exists!');
+                        return; // Don't rename
+                    }
+
+                    // Rebuild object to rename key and maintain order
+                    const newSection = {};
+                    for (const k in section) {
+                        if (k === oldKey) {
+                            newSection[newKey] = section[oldKey];
+                        } else {
+                            newSection[k] = section[k];
+                        }
+                    }
+                    job[sectionName] = newSection;
+                },
+
+                // --- File Save / Load ---
+                saveToFile() {
+                    const combinedData = {
+                        STAGES: this.stages,
+                        JOBS: this.jobs
+                    };
+                    const dataStr = JSON.stringify(combinedData, null, 2);
+                    const dataBlob = new Blob([dataStr], { type: 'application/json;charset=utf-8' });
+                    const url = URL.createObjectURL(dataBlob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    
+                    let filename = this.exportFilename.trim() || 'poetry';
+                    link.download = filename + '.json';
+
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(url);
+                },
+
+                // **** MODIFICATION 2: "loadFromFile" function ****
+                loadFromFile(event) {
+                    const file = event.target.files[0];
+                    if (!file) {
+                        return; // User cancelled
+                    }
+
+                    const reader = new FileReader();
+                    
+                    // Use arrow function to preserve 'this' context
+                    reader.onload = (e) => {
+                        let parsedData;
+                        try {
+                            parsedData = JSON.parse(e.target.result);
+                        } catch (error) {
+                            alert(`Failed to load file. Invalid JSON format.\nError: ${error.message}`);
+                            event.target.value = null; // Clear file input
+                            return;
+                        }
+
+                        // Validate the structure
+                        if (parsedData && parsedData.STAGES && parsedData.JOBS &&
+                            typeof parsedData.STAGES === 'object' && 
+                            !Array.isArray(parsedData.STAGES) && 
+                            Array.isArray(parsedData.JOBS)) {
+                            
+                            // Success: Replace data
+                            this.stages = parsedData.STAGES;
+                            this.jobs = parsedData.JOBS;
+                            alert('File loaded successfully!');
+                        } else {
+                            // Fail: Valid JSON, but wrong format
+                            alert('File is valid JSON, but does not contain the expected STAGES (object) and JOBS (list) format. No data was loaded.');
+                        }
+                        
+                        event.target.value = null; // Clear file input
+                    };
+
+                    // Handle file read error
+                    reader.onerror = (e) => {
+                        alert('An error occurred while reading the file.');
+                        event.target.value = null; // Clear file input
+                    };
+
+                    reader.readAsText(file);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
