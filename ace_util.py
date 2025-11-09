@@ -16,7 +16,7 @@ class AcePipeline:
         self.model_name = model_name
         self._setup_client(api_key)
         self.playbook = {
-            "translation_strategies": [],
+            "process_strategies": [],
             "critique_strategies": [],
         }
         self.history = []
@@ -64,14 +64,14 @@ class AcePipeline:
         print("\n[CURATOR] Updating playbook...")
         for pattern in reflection.get("learned_patterns", []):
             # We will just use one category for simplicity
-            if pattern not in self.playbook["translation_strategies"]:
-                self.playbook["translation_strategies"].append(pattern)
-                print(f"  ✓ Added translation strategy: {pattern[:80]}...")
+            if pattern not in self.playbook["process_strategies"]:
+                self.playbook["process_strategies"].append(pattern)
+                print(f"  ✓ Added prompt strategy: {pattern[:80]}...")
         
         # Keep playbook manageable
-        self.playbook["translation_strategies"] = self.playbook["translation_strategies"][-10:]
+        self.playbook["process_strategies"] = self.playbook["process_strategies"][-10:]
         print(f"\nPlaybook now contains:")
-        print(f"  - {len(self.playbook['translation_strategies'])} translation strategies")
+        print(f"  - {len(self.playbook['process_strategies'])}  prompt strategies")
         return self.playbook
 
     def _format_playbook(self, section: str = "all") -> str:
@@ -80,9 +80,10 @@ class AcePipeline:
             return "No strategies learned yet. This is your first attempt."
 
         formatted = ""
-        if section in ["all", "translation"] and playbook.get("translation_strategies"):
-            formatted += "TRANSLATION STRATEGIES (learned from previous critiques):\n"
-            for i, s in enumerate(playbook["translation_strategies"], 1):
+        print("section : ", section )
+        if section in ["all", section ] and playbook.get("process_strategies"):
+            formatted += "PROCESS STRATEGIES (learned from previous critiques):\n"
+            for i, s in enumerate(playbook["process_strategies"], 1):
                 formatted += f"{i}. {s}\n"
         
         return formatted if formatted else "No strategies learned yet for this section."
@@ -166,7 +167,7 @@ class AcePipeline:
 
         # 3. Combine them to create the prompt that will be used for the *next* run
         current_ace_prompt = (
-            f"--- SYSTEM PROMPT ---\n{first_stage_system_prompt}\n\n"
+            f"--- SYSTEM PROMPT ---\n{first_stage_system_prompt}\n\n" +
             f"--- PLAYBOOK (for next run) ---\n{next_playbook_str}"
         )
         
@@ -190,7 +191,7 @@ class AcePipeline:
         for i, history_item in enumerate(self.history, 1):
             pb = history_item["playbook_snapshot"]
             print(f"\nAfter Run: {history_item['pipeline_id']}:")
-            print(f"  Strategies: {len(pb.get('translation_strategies', []))}")
+            print(f"  Strategies: {len(pb.get('process_strategies', []))}")
 
         print(f"\n{'='*60}\nFINAL PLAYBOOK (These are your new prompt instructions)\n{'='*60}")
         print(self._format_playbook(section="all"))
