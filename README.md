@@ -35,6 +35,12 @@ The scripts rely on an environment variable for the API key:
 export GOOGLE_API_KEY="YOUR_API_KEY_HERE"
 ```
 
+
+## pipline run
+
+```bash
+python3 ace_run_pipeline.py tang_poet.json
+```
 ## Poem review
 ```bash
 python3 ace_driver_poems.py
