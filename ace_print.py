@@ -40,7 +40,7 @@ def print_prompt(file_path, system_only=False, poem_file=None):
                 print('\n'.join(system_prompt))
             else:
                 #print("Full Prompt (System + Strategies):")
-                print("Important!  Follow all strategies in PLAYBOOK ")
+                print("Important!  Follow all strategies in PLAYBOOK and note how you followed them ")
                 print(current_ace_prompt)
 
             if poem_file:
