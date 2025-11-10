@@ -1,4 +1,3 @@
-n2allen@freebsd14 ~/github/ace_test]$ python3 ace_driver_poems.py
 Initializing AcePipeline with model: gemini-2.5-flash
 
 [IO] Loading history from poetry_translator_history.json...
@@ -11,28 +10,29 @@ PROCESSING: DuFu_Spring_Prospect (using 3 stages)
 [STAGE: 1_translate]
   ... Calling gemini-2.5-flash (Temp: 0.2) ...
 WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
-E0000 00:00:1762646598.628468  114509 alts_credentials.cc:93] ALTS creds ignored. Not running on GCP and untrusted ALTS is not enabled.
-  ... LLM call complete (8.83s)
+E0000 00:00:1762729435.133409  100251 alts_credentials.cc:93] ALTS creds ignored. Not running on GCP and untrusted ALTS is not enabled.
+  ... LLM call complete (11.59s)
   ✓ Stage complete.
 
 [STAGE: 2_critique]
   ... Calling gemini-2.5-flash (Temp: 0.1) ...
-  ... LLM call complete (11.37s)
+  ... LLM call complete (14.03s)
   ✓ Stage complete.
 
 [STAGE: 3_reflect]
   ... Calling gemini-2.5-flash (Temp: 0.3) ...
-  ... LLM call complete (3.42s)
+  ... LLM call complete (3.96s)
   ✓ Stage complete.
 
 [STAGE: CURATION]
 
 [CURATOR] Updating playbook...
-  ✓ Added translation strategy: Prioritize evocative and nuanced phrasing for descriptive elements and verbs, mo...
-  ✓ Added translation strategy: Carefully translate adverbs and particles that convey nuance (e.g., 'almost', 'o...
+  ✓ Added prompt strategy: Prioritize conciseness and elegance, especially when implying emotional or physi...
+  ✓ Added prompt strategy: Strive for vivid and evocative imagery, paying close attention to the precise nu...
 
 Playbook now contains:
-  - 2 translation strategies
+  - 2  prompt strategies
+section :  translation
 
 [IO] Saving history with 1 runs to poetry_translator_history.json...
   ✓ History saved successfully.
@@ -42,28 +42,32 @@ PROCESSING: DuFu_Moonlit_Night (using 3 stages)
 ============================================================
 
 [STAGE: 1_translate]
+section :  translation
   ... Calling gemini-2.5-flash (Temp: 0.2) ...
-  ... LLM call complete (15.32s)
+  ... LLM call complete (10.87s)
   ✓ Stage complete.
 
 [STAGE: 2_critique]
+section :  critique
   ... Calling gemini-2.5-flash (Temp: 0.1) ...
-  ... LLM call complete (9.89s)
+  ... LLM call complete (13.21s)
   ✓ Stage complete.
 
 [STAGE: 3_reflect]
+section :  all
   ... Calling gemini-2.5-flash (Temp: 0.3) ...
-  ... LLM call complete (3.93s)
+  ... LLM call complete (4.96s)
   ✓ Stage complete.
 
 [STAGE: CURATION]
 
 [CURATOR] Updating playbook...
-  ✓ Added translation strategy: When translating common phrases or actions, prioritize natural, concise English ...
-  ✓ Added translation strategy: Strive for poetic conciseness and elegant nuance, especially when conveying comp...
+  ✓ Added prompt strategy: Prioritize natural English phrasing and rhythm, even if it requires rephrasing l...
+  ✓ Added prompt strategy: Ensure interpretations of nuanced or abstract lines directly convey the intended...
 
 Playbook now contains:
-  - 4 translation strategies
+  - 4  prompt strategies
+section :  translation
 
 [IO] Saving history with 2 runs to poetry_translator_history.json...
   ✓ History saved successfully.
@@ -73,28 +77,32 @@ PROCESSING: DuFu_Gazing_at_the_Sacred_Peak (using 3 stages)
 ============================================================
 
 [STAGE: 1_translate]
+section :  translation
   ... Calling gemini-2.5-flash (Temp: 0.2) ...
-  ... LLM call complete (15.66s)
+  ... LLM call complete (16.12s)
   ✓ Stage complete.
 
 [STAGE: 2_critique]
+section :  critique
   ... Calling gemini-2.5-flash (Temp: 0.1) ...
-  ... LLM call complete (12.59s)
+  ... LLM call complete (11.98s)
   ✓ Stage complete.
 
 [STAGE: 3_reflect]
+section :  all
   ... Calling gemini-2.5-flash (Temp: 0.3) ...
-  ... LLM call complete (3.95s)
+  ... LLM call complete (4.42s)
   ✓ Stage complete.
 
 [STAGE: CURATION]
 
 [CURATOR] Updating playbook...
-  ✓ Added translation strategy: Avoid adding interpretive adjectives or flourishes, especially in rhetorical que...
-  ✓ Added translation strategy: Pay close attention to specific terms that convey geographical nuances (e.g., mo...
+  ✓ Added prompt strategy: When translating descriptions of natural phenomena or personal experience, prior...
+  ✓ Added prompt strategy: For lines describing sensory experiences or concluding statements, aim for conci...
 
 Playbook now contains:
-  - 6 translation strategies
+  - 6  prompt strategies
+section :  translation
 
 [IO] Saving history with 3 runs to poetry_translator_history.json...
   ✓ History saved successfully.
@@ -104,40 +112,40 @@ FINAL GEMINI TRANSLATIONS (After learning)
 ============================================================
 
 ----------------------------------
-Title: A Spring Prospect (春望)
+Title: Spring Prospect (春望)
 ----------------------------------
 The nation shattered, mountains and rivers endure;
-Spring in the city, where grass and trees grow deep.
+The city in spring, its grass and trees grown deep.
 Moved by the times, flowers shed tears;
 Grieving separation, birds startle the heart.
-Beacon fires have blazed for three months on end;
+Beacon fires blaze for three months on end;
 A letter from home is worth ten thousand gold.
-My white hair, scratched, grows shorter still;
-Too sparse now to hold a hairpin.
+My white hair, scratched, grows shorter still,
+Almost too sparse to hold a hairpin.
 
 ----------------------------------
 Title: Moonlit Night (月夜)
 ----------------------------------
-Tonight, the Fuzhou moon,
-In her chambers, she alone beholds.
-From afar, I long for my little children,
-Who cannot yet grasp missing Chang'an.
-Fragrant mist dampens her cloud-tressed hair,
-Its clear radiance chills her jade-pale arms.
-When shall we lean against the sheer curtain,
-And its light shines on both, drying our tears?
+Tonight, the Fuzhou moon;
+In her chamber, she watches solitary.
+Distantly I pity my small children,
+Unaware of longing for Chang'an.
+Fragrant mist damps her cloud-tresses;
+Pure light chills her jade arms.
+When will we lean by the vacant curtain,
+Both bathed in light, till our tear-streaks dry?
 
 ----------------------------------
 Title: Gazing at Mount Tai (望岳)
 ----------------------------------
-How grand is Mount Tai?
-Across Qi and Lu, its green expanse unending.
-Nature's hand bestowed its divine grace,
-Where yin and yang cleave dusk from dawn.
-Rising clouds stir the breast,
-Returning birds vanish into straining eyes.
-I shall ascend its ultimate peak,
-And all other mountains will appear small.
+Mount Tai, how does it loom?
+Its green, across Qi and Lu, unending.
+Creation gathers all its divine splendor,
+Yin and Yang cleave dusk from dawn.
+Clouds rise, stirring my breast,
+Through straining eyes, homing birds appear.
+I must ascend its highest peak,
+To see all other mountains as but small.
 
 ============================================================
 PLAYBOOK EVOLUTION (Refined Prompt Instructions)
@@ -155,12 +163,12 @@ After Run: DuFu_Gazing_at_the_Sacred_Peak:
 ============================================================
 FINAL PLAYBOOK (These are your new prompt instructions)
 ============================================================
-TRANSLATION STRATEGIES (learned from previous critiques):
-1. Prioritize evocative and nuanced phrasing for descriptive elements and verbs, moving beyond literal translations to capture imagery and active meaning.
-2. Carefully translate adverbs and particles that convey nuance (e.g., 'almost', 'on the verge of'), avoiding definitive statements when the original implies subtlety.
-3. When translating common phrases or actions, prioritize natural, concise English over more literal or elaborate phrasing.
-4. Strive for poetic conciseness and elegant nuance, especially when conveying complex emotional states or in the poem's concluding lines.
-5. Avoid adding interpretive adjectives or flourishes, especially in rhetorical questions, aiming for a neutral or direct rendering.
-6. Pay close attention to specific terms that convey geographical nuances (e.g., mountain slopes) or intense physical sensations, ensuring precision and impact.
-
+section :  all
+PROCESS STRATEGIES (learned from previous critiques):
+1. Prioritize conciseness and elegance, especially when implying emotional or physical states, rather than literal descriptions.
+2. Strive for vivid and evocative imagery, paying close attention to the precise nuance of verbs to convey atmosphere and emotional depth.
+3. Prioritize natural English phrasing and rhythm, even if it requires rephrasing literal constructions.
+4. Ensure interpretations of nuanced or abstract lines directly convey the intended meaning and integrate smoothly into the overall text, avoiding overly abstract or clunky phrasing.
+5. When translating descriptions of natural phenomena or personal experience, prioritize strong, active verbs that convey dynamism and intensity.
+6. For lines describing sensory experiences or concluding statements, aim for conciseness and vivid, impactful imagery, even if it requires a less literal approach.
 
