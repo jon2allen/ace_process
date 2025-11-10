@@ -6,6 +6,9 @@ This repository contains a proof-of-concept implementation of an **Agentic Conte
 
 The primary demonstration focuses on applying this self-improvement loop to two complex tasks: **Chinese Poetry Translation** and **Saki-style Satirical Story Generation**.
 
+
+More in Medium article - https://medium.com/@jallenswrx2016/agentic-context-engineering-cdc4e215c68d
+
 ---
 
 ##  Key Features
