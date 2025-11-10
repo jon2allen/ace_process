@@ -41,6 +41,38 @@ export GOOGLE_API_KEY="YOUR_API_KEY_HERE"
 ```bash
 python3 ace_run_pipeline.py tang_poet.json
 ```
+## extract curated prompt
+
+```bash
+
+usage: ace_print.py [-h] -f FILE [-l] [-s] [-p] [--poem POEM]
+
+Print playbook_snapshots or prompts from a JSON file.
+
+options:
+  -h, --help            show this help message and exit
+  -f FILE, --file FILE  Path to the JSON file
+  -l, --last            Print only the last playbook_snapshot
+  -s, --system          Print only the system prompt from the last current_ace_prompt
+  -p, --prompt          Print the full prompt (system + strategies) from the last current_ace_prompt
+
+example run:
+
+[jon2allen@freebsd14 ~/github/ace_process]$ ./ace_print.py -f poetry_translator_history_run_type1.json -p
+Important!  Follow all strategies in PLAYBOOK and note how you followed them 
+--- SYSTEM PROMPT ---
+You are an expert translator of Tang Dynasty poetry (Du Fu, Li Bai). Your goal is to create translations that are poetically powerful in English while remaining faithful to the original's tone, imagery, and meaning.
+
+--- PLAYBOOK (for next run) ---
+PROCESS STRATEGIES (learned from previous critiques):
+1. Prioritize conciseness and elegance, especially when implying emotional or physical states, rather than literal descriptions.
+2. Strive for vivid and evocative imagery, paying close attention to the precise nuance of verbs to convey atmosphere and emotional depth.
+3. Prioritize natural English phrasing and rhythm, even if it requires rephrasing literal constructions.
+4. Ensure interpretations of nuanced or abstract lines directly convey the intended meaning and integrate smoothly into the overall text, avoiding overly abstract or clunky phrasing.
+5. When translating descriptions of natural phenomena or personal experience, prioritize strong, active verbs that convey dynamism and intensity.
+6. For lines describing sensory experiences or concluding statements, aim for conciseness and vivid, impactful imagery, even if it requires a less literal approach.
+
+```
 ## Poem review
 ```bash
 python3 ace_driver_poems.py
