@@ -33,19 +33,21 @@ The scripts rely on an environment variable for the API key:
 
 ```bash
 export GOOGLE_API_KEY="YOUR_API_KEY_HERE"
-
+```
 
 ## Poem review
+```bash
 python3 ace_driver_poems.py
-# Or, using the generic runner with the config file:
 python3 ace_run_pipeline.py tang_poet.json
+```
 
-### Saki story generation 
+## Saki story generation 
+```bash
 python3 ace_run_pipeline.py saki6.json
+```
 
 
-
-# ACE Pipeline Logic Overview
+## ACE Pipeline Logic Overview
 Each Job in the pipeline executes a series of Stages (e.g., 1_Execute, 2_Critique, 3_Reflect).
 
 1_Execute (or 1_translate / 1_create_story): Takes the current Playbook (a list of best-practice instructions) and the raw Input (e.g., Chinese poem) to produce an output JSON.
